@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData lightTheme = ThemeData(
+    primaryColor: defaultColor,
     appBarTheme: AppBarTheme(
         titleSpacing: 10.0,
         systemOverlayStyle: SystemUiOverlayStyle(

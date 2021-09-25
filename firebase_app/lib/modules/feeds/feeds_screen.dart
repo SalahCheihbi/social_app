@@ -1,54 +1,74 @@
+import 'package:firebase_app/layout/cubit/cubit.dart';
+import 'package:firebase_app/layout/cubit/states.dart';
+import 'package:firebase_app/models/new_post_model.dart';
 import 'package:firebase_app/shared/styles/icons_broken.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 
 class FeedsScreen extends StatelessWidget {
   const FeedsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          Card(
-            margin: EdgeInsetsDirectional.all(8.0),
-            elevation: 8.0,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: Stack(
-              alignment: AlignmentDirectional.bottomEnd,
-              children: [
-                Image(
-                  fit: BoxFit.cover,
-                  height: 200.0,
-                  width: double.infinity,
-                  image: NetworkImage(
-                      'https://image.freepik.com/photos-gratuite/j-ai-peur-frayeur-portrait-homme-effraye-homme-affaires-debout-isole-fond-studio-rouge-mode-portrait-demi-longueur-male_155003-29132.jpg'),
+    return BlocConsumer<SocialCubit, SocialState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Conditional.single(
+            context: context,
+            conditionBuilder: (context) =>
+                SocialCubit.get(context).posts.length > 0 &&
+                SocialCubit.get(context).userModel != null,
+            widgetBuilder: (context) => SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Card(
+                        margin: EdgeInsetsDirectional.all(8.0),
+                        elevation: 8.0,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: Stack(
+                          alignment: AlignmentDirectional.bottomEnd,
+                          children: [
+                            Image(
+                              fit: BoxFit.cover,
+                              height: 200.0,
+                              width: double.infinity,
+                              image: NetworkImage(
+                                  'https://image.freepik.com/photos-gratuite/j-ai-peur-frayeur-portrait-homme-effraye-homme-affaires-debout-isole-fond-studio-rouge-mode-portrait-demi-longueur-male_155003-29132.jpg'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'communication with friends',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => buildPostItem(
+                              context,
+                              SocialCubit.get(context).posts[index],
+                              index),
+                          separatorBuilder: (context, index) => SizedBox(
+                                height: 5.0,
+                              ),
+                          itemCount: SocialCubit.get(context).posts.length)
+                    ],
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'communication with friends',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          ),
-          ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => buildPostItem(context, index),
-              separatorBuilder: (context, index) => SizedBox(
-                    height: 5.0,
-                  ),
-              itemCount: 10)
-        ],
-      ),
+            fallbackBuilder: (context) =>
+                Center(child: CircularProgressIndicator()));
+      },
     );
   }
 }
 
-Widget buildPostItem(context, index) => Card(
+Widget buildPostItem(context, PostModel model, index) => Card(
       elevation: 5.0,
       margin: EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -57,12 +77,13 @@ Widget buildPostItem(context, index) => Card(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(
-                      'https://image.freepik.com/photos-gratuite/j-ai-peur-frayeur-portrait-homme-effraye-homme-affaires-debout-isole-fond-studio-rouge-mode-portrait-demi-longueur-male_155003-29132.jpg'),
+                      '${SocialCubit.get(context).userModel.image}'),
                 ),
                 SizedBox(
                   width: 10.0,
@@ -74,7 +95,7 @@ Widget buildPostItem(context, index) => Card(
                       Row(
                         children: [
                           Text(
-                            'Salah Eddine Cheihbi',
+                            '${model.name}',
                             style: TextStyle(
                                 height: 1.4, fontWeight: FontWeight.w600),
                           ),
@@ -89,7 +110,7 @@ Widget buildPostItem(context, index) => Card(
                         ],
                       ),
                       Text(
-                        'Junary 09 2022',
+                        '${model.dateTime}',
                         style: Theme.of(context)
                             .textTheme
                             .caption!
@@ -110,8 +131,8 @@ Widget buildPostItem(context, index) => Card(
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               child: Text(
-                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the \'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing',
-                style: Theme.of(context).textTheme.subtitle1,
+                '${model.text}',
+                style: Theme.of(context).textTheme.subtitle2,
               ),
             ),
             Padding(
@@ -152,21 +173,21 @@ Widget buildPostItem(context, index) => Card(
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Container(
-                height: 140.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.0),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'https://image.freepik.com/photos-gratuite/j-ai-peur-frayeur-portrait-homme-effraye-homme-affaires-debout-isole-fond-studio-rouge-mode-portrait-demi-longueur-male_155003-29132.jpg'),
+            if (model.postImage != '')
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Container(
+                  height: 140.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage('${model.postImage}'),
+                    ),
                   ),
                 ),
               ),
-            ),
             Row(
               children: [
                 InkWell(
@@ -182,7 +203,7 @@ Widget buildPostItem(context, index) => Card(
                         SizedBox(
                           width: 5.0,
                         ),
-                        Text('120')
+                        Text('${SocialCubit.get(context).likes.length}')
                       ],
                     ),
                   ),
@@ -203,12 +224,51 @@ Widget buildPostItem(context, index) => Card(
                             width: 5.0,
                           ),
                           Text(
-                            '120 comment',
+                            '0 comment',
                             style: Theme.of(context).textTheme.caption,
                           ),
                         ],
                       ),
                     ),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      '${SocialCubit.get(context).userModel.image}'),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'write a comment...',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    SocialCubit.get(context)
+                        .getLike(SocialCubit.get(context).postsId[index]);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        IconBroken.Heart,
+                        size: 14.0,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      Text('Like', style: Theme.of(context).textTheme.caption),
+                    ],
                   ),
                 )
               ],

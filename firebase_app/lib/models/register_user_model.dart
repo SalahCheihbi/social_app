@@ -3,7 +3,7 @@ class UserModel {
   late String email;
   late String phone;
   late String uId;
-  late bool IsEmailVerified;
+  bool? isEmailVerified;
   late String image;
   late String cover;
   late String bio;
@@ -13,7 +13,7 @@ class UserModel {
     required this.email,
     required this.phone,
     required this.uId,
-    required this.IsEmailVerified,
+    this.isEmailVerified,
     required this.image,
     required this.cover,
     required this.bio,
@@ -27,7 +27,7 @@ class UserModel {
     bio = json['bio'];
     image = json['image'];
     cover = json['cover'];
-    IsEmailVerified = json['IsEmailVerified'];
+    isEmailVerified = json['IsEmailVerified'];
   }
 
   Map<String, dynamic> toMap() {
@@ -39,7 +39,7 @@ class UserModel {
       'bio': bio,
       'cover': cover,
       'image': image,
-      'IsEmailVerified': IsEmailVerified,
+      'IsEmailVerified': isEmailVerified,
     };
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_app/layout/cubit/cubit.dart';
 import 'package:firebase_app/layout/cubit/states.dart';
 import 'package:firebase_app/modules/edit_profile/edit_profil_screen.dart';
+import 'package:firebase_app/shared/styles/colors.dart';
 
 import 'package:firebase_app/shared/styles/icons_broken.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var userModel = SocialCubit.get(context).model;
+        var userModel = SocialCubit.get(context).userModel;
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -148,7 +149,8 @@ class SettingsScreen extends StatelessWidget {
                         Expanded(
                             child: OutlinedButton(
                           onPressed: () {},
-                          child: Text('Add Photos'),
+                          child: Text('Add Photos',
+                              style: TextStyle(color: defaultColor)),
                         )),
                         SizedBox(
                           width: 5.0,
@@ -161,7 +163,10 @@ class SettingsScreen extends StatelessWidget {
                                       builder: (context) =>
                                           EditProfileScreen()));
                             },
-                            child: Icon(IconBroken.Edit))
+                            child: Icon(
+                              IconBroken.Edit,
+                              color: Colors.orange,
+                            ))
                       ],
                     )
                   ],

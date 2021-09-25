@@ -1,3 +1,4 @@
+import 'package:firebase_app/shared/styles/colors.dart';
 import 'package:firebase_app/shared/styles/icons_broken.dart';
 import 'package:flutter/material.dart';
 
@@ -9,19 +10,31 @@ Widget defaultFromField({
   bool? isPassword = false,
   TextInputType? type,
   IconData? suffix,
+  TextStyle? labelStyle,
   Function()? suffixPressed,
 }) =>
     TextFormField(
+      cursorColor: defaultColor,
       controller: controller,
       keyboardType: type,
       obscureText: isPassword!,
       validator: validate,
       decoration: InputDecoration(
+        labelStyle: labelStyle,
+        // fillColor: defaultColor,
+        // focusedBorder:
+        //     OutlineInputBorder(borderSide: BorderSide(color: defaultColor,)),
         labelText: label,
         suffixIcon: suffix != null
-            ? IconButton(onPressed: suffixPressed, icon: Icon(suffix))
+            ? IconButton(
+                onPressed: suffixPressed,
+                icon: Icon(suffix),
+                color: Colors.grey,
+              )
             : null,
-        prefixIcon: Icon(prefix),
+        prefixIcon: Icon(
+          prefix,
+        ),
         border: OutlineInputBorder(),
       ),
     );
@@ -51,7 +64,12 @@ Widget defaultTextButton({
   required String text,
   required void Function()? function,
 }) =>
-    TextButton(onPressed: function, child: Text(text));
+    TextButton(
+        onPressed: function,
+        child: Text(text,
+            style: TextStyle(
+              color: Colors.orange,
+            )));
 
 defaultAppBar({
   required BuildContext context,

@@ -32,7 +32,10 @@ class ShopLoginScreen extends StatelessWidget {
                 fontSize: 16.0);
           }
           if (state is ShopLoginSuccessStates) {
-            CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
+            CacheHelper.saveData(
+              key: 'uId',
+              value: state.uId,
+            ).then((value) {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => SocialLayout()),

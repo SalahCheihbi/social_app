@@ -45,7 +45,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
           'https://image.freepik.com/photos-gratuite/medecin-sans-visage-fait-injection-vaccin-covid-19-patient-age-porte-gants-protection-caoutchouc_273609-52652.jpg',
       image:
           'https://image.freepik.com/photos-gratuite/medecin-sans-visage-fait-injection-vaccin-covid-19-patient-age-porte-gants-protection-caoutchouc_273609-52652.jpg',
-      IsEmailVerified: false,
+      isEmailVerified: false,
     );
     FirebaseFirestore.instance
         .collection('users')
